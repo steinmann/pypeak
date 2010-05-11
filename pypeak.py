@@ -19,8 +19,6 @@ import csv
 import operator
 from optparse import OptionParser
 
-from numpy import diff
-
 def main():
 	# option parser
 	usage = 'python pypeak.py <ip_bed_file> <control_bed_file>'
@@ -180,6 +178,12 @@ def build_coverage_dict(file_name):
 def print_status(string, boolean):
 	if boolean:
 		print(string)
+
+def diff(x):
+	d = []
+	for i in range(len(x)-1):
+		d.append(x[i+1] - x[i])
+	return d
 
 if __name__ == '__main__':
 	main()
