@@ -1,1 +1,16 @@
-this readme is not done yet
+Usage: python pypeak.py <ip_bed_file> <control_bed_file>
+
+Options:
+  -h, --help            show this help message and exit
+  -w WINDOW_LENGTH, --window_length=WINDOW_LENGTH
+                        scanning window size in bp for each strand:
+                        default=135
+  -s SIGNAL_THRESHOLD, --signal_threshold=SIGNAL_THRESHOLD
+                        signal threshold calling enriched regions: default=5
+  -o OUT_FILE, --out_file=OUT_FILE
+                        name of the bed file output is written to
+  -q, --quiet           don't print status messages to stdout
+  -d DIP_THRESHOLD, --dip_threshold=DIP_THRESHOLD
+                        dip threshold for splitting enriched regions:
+                        default=0.6
+
