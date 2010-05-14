@@ -129,9 +129,9 @@ def peak_scanner(plus_strand, minus_strand, chr, options):
 		else:
 			if len(peak_region) > 0:
 				peaks = find_peaks(peak_region, options.dip_threshold)
-				for i in peaks:
+				for j in peaks:
 					count += 1
-					peak = (chr, i[1] - l, i[1] + l,'%s_Peak_%d' % (chr, count), i[0])
+					peak = (chr, j[1] - l, j[1] + l,'%s_Peak_%d' % (chr, count), j[0])
 					peaklist.append(peak)
 				peak_region = []
 	return peaklist
