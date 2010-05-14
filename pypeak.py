@@ -58,17 +58,17 @@ def main():
 	
 	# find peaks and store in a dictionary
 	peak_dict = {}
-	for chr in enrichment_dict.keys():
-		print_status('Finding peaks on chromosome %s' % chr, options.verbose)
-		plus_strand = enrichment_dict[chr]['+']
-		minus_strand = enrichment_dict[chr]['-']
-		peak_dict[chr] = peak_scanner(plus_strand, minus_strand, chr, options)
+	for chrom in enrichment_dict.keys():
+		print_status('Finding peaks on chromosome %s' % chrom, options.verbose)
+		plus_strand = enrichment_dict[chrom]['+']
+		minus_strand = enrichment_dict[chrom]['-']
+		peak_dict[chrom] = peak_scanner(plus_strand, minus_strand, chrom, options)
 	
 	# create outfile and write peaks to it
 	f = open(options.out_file, 'w')
 	f.close()
-	for chr in peak_dict.keys():
-		for i in peak_dict[chr]:
+	for chrom in peak_dict.keys():
+		for i in peak_dict[chrom]:
 			f = open(options.out_file, 'a')
 			f.write('%s\t%d\t%d\t%s\t%.2f\n' % i)
 			f.close()
@@ -111,7 +111,7 @@ def find_peaks(peak_region, dip_threshold):
 			return [first_peak, second_peak]
 	return [first_peak]
 
-def peak_scanner(plus_strand, minus_strand, chr, options):
+def peak_scanner(plus_strand, minus_strand, chrom, options):
 	# scan alignment, extract enriched regions and find peaks
 	l = options.window_length
 	t = options.signal_threshold
@@ -131,7 +131,7 @@ def peak_scanner(plus_strand, minus_strand, chr, options):
 				peaks = find_peaks(peak_region, options.dip_threshold)
 				for j in peaks:
 					count += 1
-					peak = (chr, j[1] - l, j[1] + l,'%s_Peak_%d' % (chr, count), j[0])
+					peak = (chrom, j[1] - l, j[1] + l,'%s_Peak_%d' % (chrom, count), j[0])
 					peaklist.append(peak)
 				peak_region = []
 	return peaklist
@@ -140,41 +140,41 @@ def build_enrichment_dict(ip_dict, c_dict):
 	# create dict with subtracted enrichment values
 	enr_dict = {}
 	# adjust chromosome length in both dictionaries
-	for chr in ip_dict.keys():
-		enr_dict[chr] = {}
-		for strand in ip_dict[chr].keys():
-			ip_length = len(ip_dict[chr][strand])
-			c_length = len(c_dict[chr][strand])
+	for chrom in ip_dict.keys():
+		enr_dict[chrom] = {}
+		for strand in ip_dict[chrom].keys():
+			ip_length = len(ip_dict[chrom][strand])
+			c_length = len(c_dict[chrom][strand])
 			if ip_length < c_length:
-				ip_dict[chr][strand].extend([0]*(c_length - ip_length))
+				ip_dict[chrom][strand].extend([0]*(c_length - ip_length))
 			else:
-				c_dict[chr][strand].extend([0]*(ip_length - c_length))
+				c_dict[chrom][strand].extend([0]*(ip_length - c_length))
 	# subtract enrichment value from one from the other
-	for chr in ip_dict.keys():
-		enr_dict[chr]['+'] = map(operator.sub, ip_dict[chr]['+'], c_dict[chr]['+'])
-		enr_dict[chr]['-'] = map(operator.sub, ip_dict[chr]['-'], c_dict[chr]['-'])
+	for chrom in ip_dict.keys():
+		enr_dict[chrom]['+'] = map(operator.sub, ip_dict[chrom]['+'], c_dict[chrom]['+'])
+		enr_dict[chrom]['-'] = map(operator.sub, ip_dict[chrom]['-'], c_dict[chrom]['-'])
 	return enr_dict
 	
 def build_coverage_dict(file_name):
 	# parse a bed file and create a strand specific coverage dict
 	cov_dict = {}
 	for i in csv.reader(open(file_name), delimiter='\t'):
-		chr = i[0]
+		chrom = i[0]
 		start = int(i[1])
 		end = int(i[2])
 		strand = i[5]
 		# if chromosome is not in the dict, required keys
-		if not chr in cov_dict:
-			cov_dict[chr] = {}
-			cov_dict[chr]['+'] = []
-			cov_dict[chr]['-'] = []
+		if not chrom in cov_dict:
+			cov_dict[chrom] = {}
+			cov_dict[chrom]['+'] = []
+			cov_dict[chrom]['-'] = []
 		# dynamically adjust chromosome length if not long enough
-		chr_len = len(cov_dict[chr][strand])
-		if 	chr_len < end + 1:
-			cov_dict[chr][strand].extend([0]*(end - chr_len + 1))
+		chrom_len = len(cov_dict[chrom][strand])
+		if 	chrom_len < end + 1:
+			cov_dict[chrom][strand].extend([0]*(end - chrom_len + 1))
 		# add alignment to the computed coverage
 		for i in range(start, end + 1):
-			cov_dict[chr][strand][i] += 1
+			cov_dict[chrom][strand][i] += 1
 	return cov_dict
 
 def print_status(string, boolean):
