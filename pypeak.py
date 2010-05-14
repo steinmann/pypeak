@@ -113,25 +113,25 @@ def find_peaks(peak_region, dip_threshold):
 
 def peak_scanner(plus_strand, minus_strand, chrom, options):
 	# scan alignment, extract enriched regions and find peaks
-	l = options.window_length
-	t = options.signal_threshold
+	length = options.window_length
+	threshold = options.signal_threshold
 	peaklist = []
 	peak_region = []
 	count = 0
 	# scan both strands with shifted double windows
-	for i in range(0 + l, len(plus_strand) - l):
-		plus_enr = sum(plus_strand[i-l:i])
-		minus_enr = sum(minus_strand[i:i+l])
-		peak_enr = (plus_enr + minus_enr) / (2.0 * l)
+	for i in range(0 + length, len(plus_strand) - length):
+		plus_enr = sum(plus_strand[i-length:i])
+		minus_enr = sum(minus_strand[i:i+length])
+		peak_enr = (plus_enr + minus_enr) / (2.0 * length)
 		# extract enriched regions and call peak finding function
-		if peak_enr > t:
+		if peak_enr > threshold:
 			peak_region.append((peak_enr,i))
 		else:
 			if len(peak_region) > 0:
 				peaks = find_peaks(peak_region, options.dip_threshold)
 				for j in peaks:
 					count += 1
-					peak = (chrom, j[1] - l, j[1] + l,'%s_Peak_%d' % (chrom, count), j[0])
+					peak = (chrom, j[1] - length, j[1] + length,'%s_Peak_%d' % (chrom, count), j[0])
 					peaklist.append(peak)
 				peak_region = []
 	return peaklist
