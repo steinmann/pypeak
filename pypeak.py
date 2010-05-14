@@ -90,8 +90,7 @@ def find_peaks(peak_region, dip_threshold):
 		tiny_peak = peak_region[0]
 		return [tiny_peak]
 	# sort maxima in descending order
-	maxima.sort()
-	maxima.reverse()
+	maxima = sorted(maxima, reverse=True) 
 	# the first peak is defined as the highest maximum
 	highest_max = maxima[0]
 	first_peak = (highest_max[0], p[highest_max[1]])
