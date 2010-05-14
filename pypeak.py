@@ -41,6 +41,8 @@ def main():
 	
 	# read arguments and options
 	(options, args) = parser.parse_args()
+	if len(args) != 2:
+		parser.error('Please provide an ip and control file!') 
 	ip_bed = args[0]
 	control_bed = args[1]
 	
